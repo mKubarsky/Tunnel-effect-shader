@@ -1,0 +1,76 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://test_2.jpg" type="Texture" id=1]
+[ext_resource path="res://RoundTunnel.gd" type="Script" id=2]
+[ext_resource path="res://test_1.jpg" type="Texture" id=3]
+[ext_resource path="res://SquareTunnel.gd" type="Script" id=4]
+[ext_resource path="res://CanvasLayer.gd" type="Script" id=5]
+[ext_resource path="res://roundTunnel.gdshader" type="Shader" id=6]
+[ext_resource path="res://squareTunnel.gdshader" type="Shader" id=7]
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = ExtResource( 6 )
+shader_param/direction = Vector2( 8, -2 )
+shader_param/speed_fly = 1.0
+
+[sub_resource type="ShaderMaterial" id=10]
+shader = ExtResource( 7 )
+shader_param/direction = Vector2( -8, 2 )
+shader_param/speed_fly = 0.1
+
+[node name="Root" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+script = ExtResource( 5 )
+
+[node name="RoundTunnel" type="TextureRect" parent="Camera2D/CanvasLayer"]
+material = SubResource( 8 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 1 )
+stretch_mode = 2
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SquareTunnel" type="TextureRect" parent="Camera2D/CanvasLayer"]
+visible = false
+material = SubResource( 10 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 3 )
+stretch_mode = 2
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VScrollBar" type="VScrollBar" parent="Camera2D/CanvasLayer"]
+anchor_bottom = 1.0
+margin_right = 12.0
+min_value = -2.0
+max_value = 2.0
+step = 0.1
+value = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="Camera2D/CanvasLayer"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 14.0
+margin_top = -28.0
+margin_right = 78.0
+text = "switch"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="value_changed" from="Camera2D/CanvasLayer/VScrollBar" to="Camera2D/CanvasLayer/RoundTunnel" method="_on_VScrollBar_value_changed"]
+[connection signal="value_changed" from="Camera2D/CanvasLayer/VScrollBar" to="Camera2D/CanvasLayer/SquareTunnel" method="_on_VScrollBar_value_changed"]
+[connection signal="pressed" from="Camera2D/CanvasLayer/Button" to="Camera2D/CanvasLayer" method="_on_Button_pressed"]
